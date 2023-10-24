@@ -1,0 +1,15 @@
+C:\Users\disrct\Desktop\othello-ai\ai\bin\Debug\net7.0\ai.exe
+C:\Users\disrct\Desktop\othello-ai\ai\bin\Debug\net7.0\ai.deps.json
+C:\Users\disrct\Desktop\othello-ai\ai\bin\Debug\net7.0\ai.runtimeconfig.json
+C:\Users\disrct\Desktop\othello-ai\ai\bin\Debug\net7.0\ai.dll
+C:\Users\disrct\Desktop\othello-ai\ai\bin\Debug\net7.0\ai.pdb
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.csproj.AssemblyReference.cache
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.AssemblyInfoInputs.cache
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.AssemblyInfo.cs
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.csproj.CoreCompileInputs.cache
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.dll
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\refint\ai.dll
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.pdb
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ai.genruntimeconfig.cache
+C:\Users\disrct\Desktop\othello-ai\ai\obj\Debug\net7.0\ref\ai.dll
