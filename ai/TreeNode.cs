@@ -22,7 +22,7 @@ public class TreeNode
             if(child.State == game)
                 return child;
     
-        return null;
+        return Children.OrderByDescending(x => x.Score).Max();
     }
 
     public void Expand(int deep)

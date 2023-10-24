@@ -27,7 +27,6 @@ if (tree.YourTurn)
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
 
     System.Console.WriteLine("Jogou");
-
 }
 
 
