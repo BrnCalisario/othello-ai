@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 
 public struct Othello
 {
@@ -7,6 +6,33 @@ public struct Othello
 
     private const byte line = 8;
     private const byte collums = 8;
+
+    public readonly bool GameOver() => whiteCount + blackCount == 64;
+    public readonly bool WhiteWon() => whiteCount > blackCount;
+
+    public static bool operator ==(Othello a, Othello b)
+    {
+        return (
+            a.WhitePlays == b.WhitePlays &&
+            a.whiteInfo == b.whiteInfo &&
+            a.whiteCount == b.whiteCount &&
+            a.blackInfo == b.blackInfo &&
+            a.blackCount == b.blackCount
+        );
+    }
+
+    public static bool operator !=(Othello a, Othello b)
+    {
+        return !(a == b);
+    }
+
+
+
+
+    public byte lastX;
+    public byte lastY;
+
+    public readonly (int x, int y) GetLast() => (lastX, lastY);
 
     public static Othello New()
     {
@@ -78,6 +104,9 @@ public struct Othello
             blackInfo++;
         }
 
+        lastX = (byte)i;
+        lastY = (byte)j;
+
         Pass();
     }
 
@@ -125,31 +154,31 @@ public struct Othello
                         var adjX = x + i;
                         var adjY = y + j;
 
-                        if(adjX < 0 || adjX > collums)
-                            continue;
-                        
-                        if(adjY < 0 || adjY > line)
+                        if (adjX < 0 || adjX > collums)
                             continue;
 
-                        var space=  this[adjX, adjY];
+                        if (adjY < 0 || adjY > line)
+                            continue;
+
+                        var space = this[adjX, adjY];
 
                         if (space != player)
                             continue;
 
-                        while(true)
+                        while (true)
                         {
                             adjX += i * -1; // -1 0 1
                             adjY += j * -1; // -1 0 1
 
-                            if(adjX < 0 || adjX > collums)
+                            if (adjX < 0 || adjX > collums)
                                 break;
 
-                            if(adjY < 0 || adjY > line)
+                            if (adjY < 0 || adjY > line)
                                 break;
 
                             space = this[adjX, adjY];
 
-                            if(space != 0)
+                            if (space != 0)
                                 continue;
 
                             yield return (adjX, adjY);
@@ -161,6 +190,19 @@ public struct Othello
 
             }
         }
+    }
+
+
+    public Othello Clone()
+    {
+        return new Othello
+        {
+            whiteInfo = this.whiteInfo,
+            blackInfo = this.blackInfo,
+            whiteCount = this.whiteCount,
+            blackCount = this.blackCount,
+            whitePlays = whitePlays
+        };
     }
 }
 
