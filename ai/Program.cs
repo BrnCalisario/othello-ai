@@ -1,4 +1,4 @@
-// using System.Linq;
+﻿// using System.Linq;
 
 // Othello o = Othello.New();
 
@@ -28,9 +28,6 @@ if(tree.YourTurn)
     tree.PlayBest();
 
     tree.Expand(deep);
-
-    // var last = tree.State.GetLast();
-
 
 }
 

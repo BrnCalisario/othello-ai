@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public struct Othello
 {
@@ -19,6 +21,7 @@ public struct Othello
             a.blackInfo == b.blackInfo &&
             a.blackCount == b.blackCount
         );
+
     }
 
     public static bool operator !=(Othello a, Othello b)
@@ -104,11 +107,92 @@ public struct Othello
             blackInfo++;
         }
 
+        PaintIntersections(i, j);
+
         lastX = (byte)i;
         lastY = (byte)j;
 
         Pass();
     }
+
+    private void PaintIntersections(int x, int y)
+    {
+        ulong playerBoard = WhitePlays ? whiteInfo : blackInfo;
+        ulong enemyBoard = WhitePlays ? blackInfo : whiteInfo;
+        
+        List<(int x, int y)> list = new();
+
+        var index = x + y * 8;
+
+        for (int j = -8; j < 9; j += 8)
+        {
+            for (int i = -1; i < 2; i++)
+            {
+                if (j == i)
+                    continue;
+
+                var adj = index + j + i;
+
+                if(adj < 0 || adj > 64)
+                    continue;
+
+                var place = enemyBoard & (u << adj);
+
+                if (place == 0)
+                    continue;
+
+                var tempX = i;
+                var tempY = j;
+
+                while (true)
+                {   
+                    tempX += i;
+                    tempY += j;
+                    
+                    var tempAdj = index + tempY + tempX;
+
+                    if(tempAdj < 0 || tempAdj > 64)
+                        break;
+
+                    var enemyBlock = enemyBoard & (u << index + tempY + tempX);
+                    var playerBlock = playerBoard & (u << index + tempY + tempX);
+
+                    if(enemyBlock > 0)
+                    {
+                        list.Add((tempX, tempY / 8));
+                        continue;
+                    }
+
+                    if(playerBlock > 0)
+                        break;
+                }
+            }
+        }
+
+        foreach(var p in list)
+        {
+            SwitchColor(p.x, p.y, whitePlays);
+        }
+    }
+
+    private void SwitchColor(int x, int y, byte color)
+    {
+
+        // Alerta de bug: se trocar valor zerado que já esta zerado irá quebrar tudo
+        // Sugestão: verificação se valor já está alterado
+
+        var index = x + y * 8;
+        
+        var colorIn = color == 1 ? whiteInfo : blackInfo;
+        var colorOut = color == 1 ? blackInfo : whiteInfo;
+
+        colorOut -= u << index; 
+        colorIn += u << index;
+        
+        whiteInfo = color == 1 ? colorIn : colorOut;
+        blackInfo = color == 1 ? colorOut : colorIn;
+    }
+
 
     private byte whitePlays;
     private ulong whiteInfo;
@@ -192,6 +276,30 @@ public struct Othello
         }
     }
 
+
+    // public IEnumerable<(int x, int y)> NextMoves()
+    // {
+    //     ulong window = 1;
+
+    //     int x = 0;
+    //     int y = 0;
+
+    //     for(int inc = 0; inc < 64; inc++)
+    //     {
+    //         var spot = whiteInfo | window;
+
+    //         if(spot == 0)
+    //             continue;
+
+    //         x = (int)(spot / 8);
+    //         y = (int)(spot / 8);
+
+
+    //     }
+
+
+    //     yield  return (x, y);
+    // }
 
     public Othello Clone()
     {
