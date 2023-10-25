@@ -107,12 +107,12 @@ public struct Othello
             blackCount++;
         }
 
+        lastY = (byte)j;
+        lastX = (byte)i;
         PaintIntersections(i, j);
 
-        lastX = (byte)i;
-        lastY = (byte)j;
-
         Pass();
+
     }
 
     private void PaintIntersections(int x, int y)
@@ -146,8 +146,6 @@ public struct Othello
 
                 while (true)
                 {
-                    tempX += i;
-                    tempY += j;
 
                     var tempAdj = index + tempY + tempX;
 
@@ -163,11 +161,20 @@ public struct Othello
                         var enemyY = tempAdj / 8;
 
                         list.Add((enemyX, enemyY));
+
+                        tempX += i;
+                        tempY += j;
+
                         continue;
                     }
 
+                    tempX += i;
+                    tempY += j;
+
                     if (playerBlock > 0)
                         break;
+
+
                 }
             }
         }
@@ -186,14 +193,14 @@ public struct Othello
 
         var index = x + y * 8;
 
-        var colorIn = color == 0 ? whiteInfo : blackInfo;
-        var colorOut = color == 0 ? blackInfo : whiteInfo;
+        var colorIn = color == 1 ? whiteInfo : blackInfo;
+        var colorOut = color == 1 ? blackInfo : whiteInfo;
 
         colorOut -= u << index;
         colorIn += u << index;
 
-        whiteInfo = color == 0 ? colorIn : colorOut;
-        blackInfo = color == 0 ? colorOut : colorIn;
+        whiteInfo = color == 1 ? colorIn : colorOut;
+        blackInfo = color == 1 ? colorOut : colorIn;
     }
 
 
