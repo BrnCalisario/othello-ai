@@ -45,7 +45,7 @@ public struct Othello
             blackInfo = (u << 28) + (u << 35),
             whiteCount = 2,
             blackCount = 2,
-            whitePlays = 0
+            whitePlays = 1
         };
     }
 

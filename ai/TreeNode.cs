@@ -22,7 +22,7 @@ public class TreeNode
             if(child.State == game)
                 return child;
     
-        return null;
+        return Children.OrderByDescending(x => x.Score).Max();
     }
 
     public void Expand(int deep)
@@ -53,8 +53,6 @@ public class TreeNode
         
         foreach(var child in this.Children)
             child.Expand(deep - 1);
-
-        System.Console.WriteLine(Children.Count);
     }
 
     public TreeNode PlayBest()
@@ -80,7 +78,7 @@ public class TreeNode
             value = float.NegativeInfinity;
             foreach(var child in Children)
             {
-                value = MathF.Max(value, AlphaBetaPrunning(alpha, beta));
+                value = MathF.Max(value, child.AlphaBetaPrunning(alpha, beta));
 
                 if(value > beta)
                     break;
@@ -94,7 +92,7 @@ public class TreeNode
 
             foreach(var child in Children)
             {
-                value = MathF.Min(value, AlphaBetaPrunning(alpha, beta));
+                value = MathF.Min(value, child.AlphaBetaPrunning(alpha, beta));
 
                 if(value < alpha)
                     break;
@@ -102,6 +100,7 @@ public class TreeNode
                 alpha = MathF.Max(alpha, value);
             }
         }
+        this.Score = value;
         return value;
     }
 
