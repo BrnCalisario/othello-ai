@@ -62,6 +62,7 @@ public class TreeNode
     }
 
     public float AlphaBeta() => this.AlphaBetaPrunning(float.NegativeInfinity, float.PositiveInfinity);
+    
     float AlphaBetaPrunning(float alpha, float beta)
     {
         if(this.Children.Count == 0)
