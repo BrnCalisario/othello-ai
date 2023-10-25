@@ -104,7 +104,7 @@ public struct Othello
             if (blackInfo == temp)
                 return;
 
-            blackInfo++;
+            blackCount++;
         }
 
         PaintIntersections(i, j);
@@ -217,7 +217,7 @@ public struct Othello
       => $"{whitePlays} {whiteInfo} {whiteCount} {blackInfo} {blackCount}";
 
 
-    public IEnumerable<(int x, int y)> PossibleMoves()
+    public readonly IEnumerable<(int x, int y)> PossibleMoves()
     {
         int enemy = WhitePlays ? 2 : 1;
         int player = WhitePlays ? 1 : 2;
@@ -243,7 +243,7 @@ public struct Othello
 
                         var index = adjX + adjY * 8;
 
-                        if (index > 64 || index < 0)
+                        if (index >= 64 || index < 0)
                             break;
 
                         var space = this[adjX, adjY];
@@ -258,7 +258,7 @@ public struct Othello
 
                             index = adjX + adjY * 8;
 
-                            if (index > 64 || index < 0)
+                            if (index >= 64 || index < 0)
                                 break;
 
                             space = this[adjX, adjY];
@@ -269,10 +269,8 @@ public struct Othello
                             yield return (adjX, adjY);
                             break;
                         }
-
                     }
                 }
-
             }
         }
     }
@@ -294,11 +292,7 @@ public struct Othello
 
     //         x = (int)(spot / 8);
     //         y = (int)(spot / 8);
-
-
     //     }
-
-
     //     yield  return (x, y);
     // }
 
