@@ -119,7 +119,7 @@ public struct Othello
     {
         ulong playerBoard = WhitePlays ? whiteInfo : blackInfo;
         ulong enemyBoard = WhitePlays ? blackInfo : whiteInfo;
-        
+
         List<(int x, int y)> list = new();
 
         var index = x + y * 8;
@@ -133,7 +133,7 @@ public struct Othello
 
                 var adj = index + j + i;
 
-                if(adj < 0 || adj > 64)
+                if (adj < 0 || adj > 64)
                     continue;
 
                 var place = enemyBoard & (u << adj);
@@ -145,31 +145,34 @@ public struct Othello
                 var tempY = j;
 
                 while (true)
-                {   
+                {
                     tempX += i;
                     tempY += j;
-                    
+
                     var tempAdj = index + tempY + tempX;
 
-                    if(tempAdj < 0 || tempAdj > 64)
+                    if (tempAdj < 0 || tempAdj > 64)
                         break;
 
-                    var enemyBlock = enemyBoard & (u << index + tempY + tempX);
-                    var playerBlock = playerBoard & (u << index + tempY + tempX);
+                    var enemyBlock = enemyBoard & (u << tempAdj);
+                    var playerBlock = playerBoard & (u << tempAdj);
 
-                    if(enemyBlock > 0)
+                    if (enemyBlock > 0)
                     {
-                        list.Add((tempX, tempY / 8));
+                        var enemyX = tempAdj % 8;
+                        var enemyY = tempAdj / 8;
+
+                        list.Add((enemyX, enemyY));
                         continue;
                     }
 
-                    if(playerBlock > 0)
+                    if (playerBlock > 0)
                         break;
                 }
             }
         }
 
-        foreach(var p in list)
+        foreach (var p in list)
         {
             SwitchColor(p.x, p.y, whitePlays);
         }
@@ -182,15 +185,15 @@ public struct Othello
         // Sugestão: verificação se valor já está alterado
 
         var index = x + y * 8;
-        
-        var colorIn = color == 1 ? whiteInfo : blackInfo;
-        var colorOut = color == 1 ? blackInfo : whiteInfo;
 
-        colorOut -= u << index; 
+        var colorIn = color == 0 ? whiteInfo : blackInfo;
+        var colorOut = color == 0 ? blackInfo : whiteInfo;
+
+        colorOut -= u << index;
         colorIn += u << index;
-        
-        whiteInfo = color == 1 ? colorIn : colorOut;
-        blackInfo = color == 1 ? colorOut : colorIn;
+
+        whiteInfo = color == 0 ? colorIn : colorOut;
+        blackInfo = color == 0 ? colorOut : colorIn;
     }
 
 
@@ -238,11 +241,10 @@ public struct Othello
                         var adjX = x + i;
                         var adjY = y + j;
 
-                        if (adjX < 0 || adjX > collums)
-                            continue;
+                        var index = adjX + adjY * 8;
 
-                        if (adjY < 0 || adjY > line)
-                            continue;
+                        if (index > 64 || index < 0)
+                            break;
 
                         var space = this[adjX, adjY];
 
@@ -254,10 +256,9 @@ public struct Othello
                             adjX += i * -1; // -1 0 1
                             adjY += j * -1; // -1 0 1
 
-                            if (adjX < 0 || adjX > collums)
-                                break;
+                            index = adjX + adjY * 8;
 
-                            if (adjY < 0 || adjY > line)
+                            if (index > 64 || index < 0)
                                 break;
 
                             space = this[adjX, adjY];
