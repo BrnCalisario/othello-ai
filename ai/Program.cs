@@ -1,9 +1,7 @@
 using System.Threading;
-
 using System.IO;
 
-string file = args.Length < 1 ? "m1" : args[0];
-string player = args[0];
+string player = args.Length < 1 ? "m1" : args[0]; ;
 string path = @$"..\front\";
 
 int deep = 4;
@@ -13,7 +11,7 @@ Othello initial = Othello.New();
 TreeNode tree = new()
 {
     State = initial,
-    YourTurn = file == "m1"
+    YourTurn = player == "m1"
 };
 
 tree.Expand(deep);
@@ -26,13 +24,12 @@ if (tree.YourTurn)
 
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
 
-    System.Console.WriteLine("Jogou");
+    System.Console.WriteLine(tree.State);
 }
 
 
 while (true)
 {
-
     Thread.Sleep(1000);
 
     if (!File.Exists($"{path}[OUTPUT]{player}.txt"))
@@ -60,5 +57,5 @@ while (true)
 
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
 
-    System.Console.WriteLine("Jogou");
+    System.Console.WriteLine(tree.State);
 }
