@@ -33,7 +33,10 @@ while (true)
     Thread.Sleep(1000);
 
     if (!File.Exists($"{path}[OUTPUT]{player}.txt"))
+    {
         continue;
+    }
+    Thread.Sleep(250);
 
     var text = File.ReadAllText($"{path}[OUTPUT]{player}.txt");
 
