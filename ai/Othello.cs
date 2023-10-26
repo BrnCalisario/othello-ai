@@ -124,6 +124,8 @@ public struct Othello
 
         var index = x + y * 8;
 
+        bool flag = false;
+
         for (int j = -8; j < 9; j += 8)
         {
             for (int i = -1; i < 2; i++)
@@ -172,16 +174,20 @@ public struct Othello
                     tempY += j;
 
                     if (playerBlock > 0)
+                    {
+                        flag = true;
                         break;
+                    }
 
 
                 }
             }
         }
 
-        foreach (var p in list)
+        if(flag)
         {
-            SwitchColor(p.x, p.y, whitePlays);
+            foreach (var p in list)
+                SwitchColor(p.x, p.y, whitePlays);
         }
     }
 

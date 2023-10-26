@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\disrct\\Desktop\\othello-ai\\ai\\ai.csproj": {}
+    "C:\\Users\\disrct\\Desktop\\brunoC\\IA\\othello-ai\\ai\\ai.csproj": {}
   },
   "projects": {
-    "C:\\Users\\disrct\\Desktop\\othello-ai\\ai\\ai.csproj": {
+    "C:\\Users\\disrct\\Desktop\\brunoC\\IA\\othello-ai\\ai\\ai.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\disrct\\Desktop\\othello-ai\\ai\\ai.csproj",
+        "projectUniqueName": "C:\\Users\\disrct\\Desktop\\brunoC\\IA\\othello-ai\\ai\\ai.csproj",
         "projectName": "ai",
-        "projectPath": "C:\\Users\\disrct\\Desktop\\othello-ai\\ai\\ai.csproj",
+        "projectPath": "C:\\Users\\disrct\\Desktop\\brunoC\\IA\\othello-ai\\ai\\ai.csproj",
         "packagesPath": "C:\\Users\\disrct\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\disrct\\Desktop\\othello-ai\\ai\\obj\\",
+        "outputPath": "C:\\Users\\disrct\\Desktop\\brunoC\\IA\\othello-ai\\ai\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\disrct\\AppData\\Roaming\\NuGet\\NuGet.Config",
