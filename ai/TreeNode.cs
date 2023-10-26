@@ -29,8 +29,6 @@ public class TreeNode
     {
         if (deep == 0)
             return;
-
-
         if(!this.Expanded)
         {
             var possibleMoves = State.PossibleMoves();

@@ -24,7 +24,7 @@ if (tree.YourTurn)
 
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
 
-    System.Console.WriteLine(tree.State);
+    System.Console.WriteLine($"JOGADA:{tree.State}");
 }
 
 
@@ -33,7 +33,10 @@ while (true)
     Thread.Sleep(1000);
 
     if (!File.Exists($"{path}[OUTPUT]{player}.txt"))
+    {
         continue;
+    }
+    Thread.Sleep(250);
 
     var text = File.ReadAllText($"{path}[OUTPUT]{player}.txt");
 
@@ -57,5 +60,5 @@ while (true)
 
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
 
-    System.Console.WriteLine(tree.State);
+    System.Console.WriteLine($"JOGADA:{tree.State}");
 }
