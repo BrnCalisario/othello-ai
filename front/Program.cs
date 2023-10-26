@@ -95,10 +95,13 @@ public class OthelloView : View
     {
         if (passCount > 1)
             return;
-
-        if (game.WhitePlays)
-            get(m1, m2);
-        else get(m2, m1);
+        try {
+            if (game.WhitePlays)
+                get(m1, m2);
+            else get(m2, m1);
+        } catch {
+            
+        }
 
         void get(string path, string other)
         {

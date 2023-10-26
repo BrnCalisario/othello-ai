@@ -1,5 +1,7 @@
 using System.Threading;
 using System.IO;
+using System.Linq;
+
 
 string player = args.Length < 1 ? "m1" : args[0]; ;
 string path = @$"..\front\";
@@ -23,6 +25,7 @@ if (tree.YourTurn)
     tree.Expand(deep);
 
     File.WriteAllText($"{path + player}.txt", $"{tree.State}");
+    Thread.Sleep(1000);
 
     System.Console.WriteLine($"JOGADA:{tree.State}");
 }
@@ -33,13 +36,11 @@ while (true)
     Thread.Sleep(1000);
 
     if (!File.Exists($"{path}[OUTPUT]{player}.txt"))
-    {
         continue;
-    }
-    Thread.Sleep(250);
+    
+    Thread.Sleep(1000);
 
     var text = File.ReadAllText($"{path}[OUTPUT]{player}.txt");
-
     File.Delete($"{path}[OUTPUT]{player}.txt");
 
     var data = text.Split(" ");

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 
 public struct Othello
 {
@@ -102,99 +99,204 @@ public struct Othello
 
         lastY = (byte)j;
         lastX = (byte)i;
-        PaintIntersections(i, j);
+
+        Intersect(i, j);
 
         Pass();
     }
 
-    private void PaintIntersections(int x, int y)
+
+    private void Intersect(int x, int y)
     {
-        ulong playerBoard = WhitePlays ? whiteInfo : blackInfo;
-        ulong enemyBoard = WhitePlays ? blackInfo : whiteInfo;
+        var enemy = WhitePlays ? 2 : 1;
+ 
+        var playerBoard = WhitePlays ? whiteInfo : blackInfo;
+        var enemyBoard = WhitePlays ? blackInfo : whiteInfo;
 
-        List<(int x, int y)> list = new();
+        var playerCount = WhitePlays ? whiteCount : blackCount;
+        var enemyCount = WhitePlays ? blackCount : whiteCount;
 
-        var index = x + y * 8;
+        bool changed = false;
 
-        bool flag = false;
-
-        for (int j = -8; j < 9; j += 8)
+        for (int j = -1; j <= 1; j++)
         {
-            for (int i = -1; i < 2; i++)
+            for (int i = -1; i <= 1; i++)
             {
-                if (j == i)
+                int place = this[x + i, y + j];
+
+                if (place != enemy)
                     continue;
 
-                var adj = index + j + i;
+                changed = false;
 
-                if (adj < 0 || adj > 64)
-                    continue;
-
-                var place = enemyBoard & (u << adj);
-
-                if (place == 0)
-                    continue;
-
-                var tempX = i;
-                var tempY = j;
-
-                while (true)
+                for (int k = 1; k < 8; k++)
                 {
-                    var tempAdj = index + tempY + tempX;
 
-                    if (tempAdj < 0 || tempAdj > 64)
-                        break;
+                    var adjX = x + i * k;
+                    var adjY = y + j * k;
 
-                    var enemyBlock = enemyBoard & (u << tempAdj);
-                    var playerBlock = playerBoard & (u << tempAdj);
+                    var index = adjX + adjY * 8;
 
-                    if (enemyBlock > 0)
+                    place = this[adjX, adjY];
+
+                    if (place == 0)
                     {
-                        var enemyX = tempAdj % 8;
-                        var enemyY = tempAdj / 8;
+                        if (!changed)
+                        {
+                            playerBoard = WhitePlays ? whiteInfo : blackInfo;
+                            enemyBoard = WhitePlays ? blackInfo : whiteInfo;
 
-                        list.Add((enemyX, enemyY));
+                            playerCount = WhitePlays ? whiteCount : blackCount;
+                            enemyCount = WhitePlays ? blackCount : whiteCount;
+                        }
 
-                        tempX += i;
-                        tempY += j;
+                        break;
+                    }
+
+                    if (place == enemy)
+                    {
+                        playerBoard |= u << index;
+                        enemyBoard ^= u << index;
+
+                        playerCount++;
+                        enemyCount--;
 
                         continue;
                     }
 
-                    tempX += i;
-                    tempY += j;
+                    whiteCount = WhitePlays ? playerCount : enemyCount;
+                    blackCount = WhitePlays ? enemyCount : playerCount;
 
-                    if (playerBlock > 0)
-                    {
-                        flag = true;
-                        break;
+                    whiteInfo = WhitePlays ? playerBoard : enemyBoard;
+                    blackInfo = WhitePlays ? enemyBoard : playerBoard;
+
+                    changed = true;
                 }
             }
         }
+    }
+    public IEnumerable<(int x, int y)> NextMoves()
+    {
+        var player = WhitePlays ? 1 : 2;
+        // var enemy = WhitePlays ? 2 : 1;
+        var board = WhitePlays ? blackInfo : whiteInfo;
 
-        foreach (var p in list)
+        for (int inc = 0; inc < 64; inc++)
         {
-            SwitchColor(p.x, p.y, whitePlays);d
+            ulong spot = board & (u << inc);
+
+            if (spot == 0)
+                continue;
+
+            var x = inc % 8;
+            var y = inc / 8;
+
+            for (int j = -1; j <= 1; j++)
+            {
+                for (int i = -1; i <= 1; i++)
+                {
+                    int place = this[x + i, y + j];
+
+                    if (i == j || place != player)
+                        continue;
+
+                    yield return (x + (i * -1), y + (j * -1));
+                }
+            }
         }
     }
 
-    private void SwitchColor(int x, int y, byte color)
-    {
+    // private void PaintIntersections(int x, int y)
+    // {
+    //     ulong playerBoard = WhitePlays ? whiteInfo : blackInfo;
+    //     ulong enemyBoard = WhitePlays ? blackInfo : whiteInfo;
 
-        // Alerta de bug: se trocar valor zerado que já esta zerado irá quebrar tudo
-        // Sugestão: verificação se valor já está alterado
+    //     List<(int x, int y)> list = new();
 
-        var index = x + y * 8;
+    //     var index = x + y * 8;
 
-        var colorIn = color == 1 ? whiteInfo : blackInfo;
-        var colorOut = color == 1 ? blackInfo : whiteInfo;
+    //     bool flag = false;
 
-        colorOut -= u << index;
-        colorIn += u << index;
+    //     for (int j = -8; j < 9; j += 8)
+    //     {
+    //         for (int i = -1; i < 2; i++)
+    //         {
+    //             if (j == i)
+    //                 continue;
 
-        whiteInfo = color == 1 ? colorIn : colorOut;
-        blackInfo = color == 1 ? colorOut : colorIn;
-    }
+    //             var adj = index + j + i;
+
+    //             if (adj < 0 || adj > 64)
+    //                 continue;
+
+    //             var place = enemyBoard & (u << adj);
+
+    //             if (place == 0)
+    //                 continue;
+
+    //             var tempX = i;
+    //             var tempY = j;
+
+    //             while (true)
+    //             {
+    //                 var tempAdj = index + tempY + tempX;
+
+    //                 if (tempAdj < 0 || tempAdj > 64)
+    //                     break;
+
+    //                 var enemyBlock = enemyBoard & (u << tempAdj);
+    //                 var playerBlock = playerBoard & (u << tempAdj);
+
+    //                 if (enemyBlock > 0)
+    //                 {
+    //                     var enemyX = tempAdj % 8;
+    //                     var enemyY = tempAdj / 8;
+
+    //                     list.Add((enemyX, enemyY));
+
+    //                     tempX += i;
+    //                     tempY += j;
+
+    //                     continue;
+    //                 }
+
+    //                 tempX += i;
+    //                 tempY += j;
+
+    //                 if (playerBlock > 0)
+    //                 {
+    //                     flag = true;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+
+    //         if(flag)
+    //             foreach (var p in list)                
+    //                 SwitchColor(p.x, p.y, whitePlays);
+
+
+
+    //     }
+    // }
+
+    // private void SwitchColor(int x, int y, byte color)
+    // {
+
+    //     // Alerta de bug: se trocar valor zerado que já esta zerado irá quebrar tudo
+    //     // Sugestão: verificação se valor já está alterado
+
+    //     var index = x + y * 8;
+
+    //     var colorIn = color == 1 ? whiteInfo : blackInfo;
+    //     var colorOut = color == 1 ? blackInfo : whiteInfo;
+
+    //     colorOut -= u << index;
+    //     colorIn += u << index;
+
+    //     whiteInfo = color == 1 ? colorIn : colorOut;
+    //     blackInfo = color == 1 ? colorOut : colorIn;
+    // }
 
 
     private byte whitePlays;
@@ -217,85 +319,64 @@ public struct Othello
       => $"{whitePlays} {whiteInfo} {whiteCount} {blackInfo} {blackCount}";
 
 
-    public readonly IEnumerable<(int x, int y)> PossibleMoves()
-    {
-        int enemy = WhitePlays ? 2 : 1;
-        int player = WhitePlays ? 1 : 2;
-
-        for (int y = 0; y < line; y++)
-        {
-            for (int x = 0; x < columns; x++)
-            {
-
-                var piece = this[x, y];
-
-                if (piece != enemy)
-                    continue;
-
-                for (int j = -1; j < 2; j++)
-                {
-                    for (int i = -1; i < 2; i++)
-                    {
-                        if (i == 0 && j == 0)
-                            continue;
-
-                        var adjX = x + i;
-                        var adjY = y + j;
-
-                        var index = adjX + adjY * 8;
-
-                        if (index >= 64 || index < 0)
-                            continue;
-
-                        var space = this[adjX, adjY];
-
-                        if (space != player)
-                            continue;
-
-                        while (true)
-                        {
-                            adjX += i * -1; // -1 0 1
-                            adjY += j * -1; // -1 0 1
-
-                            index = adjX + adjY * 8;
-
-                            if (index >= 64 || index < 0)
-                                break;
-
-                            space = this[adjX, adjY];
-
-                            if (space != 0)
-                                continue;
-
-                            yield return (adjX, adjY);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // public IEnumerable<(int x, int y)> NextMoves()
+    // public readonly IEnumerable<(int x, int y)> PossibleMoves()
     // {
-    //     ulong window = 1;
+    //     int enemy = WhitePlays ? 2 : 1;
+    //     int player = WhitePlays ? 1 : 2;
 
-    //     int x = 0;
-    //     int y = 0;
-
-    //     for(int inc = 0; inc < 64; inc++)
+    //     for (int y = 0; y < 8; y++)
     //     {
-    //         var spot = whiteInfo | window;
+    //         for (int x = 0; x < 8; x++)
+    //         {
+    //             var piece = this[x, y];
 
-    //         if(spot == 0)
-    //             continue;
+    //             if (piece != enemy)
+    //                 continue;
 
-    //         x = (int)(spot / 8);
-    //         y = (int)(spot / 8);
+    //             for (int j = -1; j < 2; j++)
+    //             {
+    //                 for (int i = -1; i < 2; i++)
+    //                 {
+    //                     if (i == 0 && j == 0)
+    //                         continue;
+
+    //                     var adjX = x + i;
+    //                     var adjY = y + j;
+
+    //                     var index = adjX + adjY * 8;
+
+    //                     if (index >= 64 || index < 0)
+    //                         break;
+
+    //                     var space = this[adjX, adjY];
+
+    //                     if (space != player)
+    //                         continue;
+
+    //                     while (true)
+    //                     {
+    //                         adjX += i * -1; // -1 0 1
+    //                         adjY += j * -1; // -1 0 1
+
+    //                         index = adjX + adjY * 8;
+
+    //                         if (index >= 64 || index < 0)
+    //                             break;
+
+    //                         space = this[adjX, adjY];
+
+    //                         if (space != 0)
+    //                             continue;
+
+    //                         yield return (adjX, adjY);
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //         }
     //     }
-    //     yield  return (x, y);
     // }
+
 
     public Othello Clone()
     {

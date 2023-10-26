@@ -31,7 +31,7 @@ public class TreeNode
             return;
         if(!this.Expanded)
         {
-            var possibleMoves = State.PossibleMoves();
+            var possibleMoves = State.NextMoves();
 
             foreach(var move in possibleMoves)
             {
