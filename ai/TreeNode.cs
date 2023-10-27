@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Xml;
 
 public class TreeNode
 {
@@ -33,6 +31,11 @@ public class TreeNode
         {
             var possibleMoves = State.NextMoves();
 
+            // foreach(var p in possibleMoves)
+            // {
+            //     System.Console.Write($"x: {p.x}, y: {p.y}\n");
+            // }
+
             foreach(var move in possibleMoves)
             {
                 var clone = State.Clone();
@@ -59,9 +62,9 @@ public class TreeNode
             YourTurn ? n.Score : -n.Score);
     }
 
-    public float AlphaBeta() => this.AlphaBetaPrunning(float.NegativeInfinity, float.PositiveInfinity);
+    public float AlphaBeta() => this.AlphaBetaPruning(float.NegativeInfinity, float.PositiveInfinity);
     
-    float AlphaBetaPrunning(float alpha, float beta)
+    float AlphaBetaPruning(float alpha, float beta)
     {
         if(this.Children.Count == 0)
         {
@@ -76,7 +79,7 @@ public class TreeNode
             value = float.NegativeInfinity;
             foreach(var child in Children)
             {
-                value = MathF.Max(value, child.AlphaBetaPrunning(alpha, beta));
+                value = MathF.Max(value, child.AlphaBetaPruning(alpha, beta));
 
                 if(value > beta)
                     break;
@@ -90,7 +93,7 @@ public class TreeNode
 
             foreach(var child in Children)
             {
-                value = MathF.Min(value, child.AlphaBetaPrunning(alpha, beta));
+                value = MathF.Min(value, child.AlphaBetaPruning(alpha, beta));
 
                 if(value < alpha)
                     break;

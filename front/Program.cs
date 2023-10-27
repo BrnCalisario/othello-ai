@@ -98,7 +98,8 @@ public class OthelloView : View
         try {
             if (game.WhitePlays)
                 get(m1, m2);
-            else get(m2, m1);
+            else 
+                get(m2, m1);
         } catch {
             
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public struct Othello
 {
@@ -74,6 +76,10 @@ public struct Othello
         ulong play = u << index;
         ulong temp;
 
+
+        if(i < 0 || i > 7 || j < 0 || j > 7)
+            System.Console.WriteLine($"{i}:{j}, play {play}");
+
         if (WhitePlays)
         {
             temp = whiteInfo;
@@ -109,7 +115,7 @@ public struct Othello
     private void Intersect(int x, int y)
     {
         var enemy = WhitePlays ? 2 : 1;
- 
+
         var playerBoard = WhitePlays ? whiteInfo : blackInfo;
         var enemyBoard = WhitePlays ? blackInfo : whiteInfo;
 
@@ -175,10 +181,11 @@ public struct Othello
             }
         }
     }
+
     public IEnumerable<(int x, int y)> NextMoves()
     {
         var player = WhitePlays ? 1 : 2;
-        // var enemy = WhitePlays ? 2 : 1;
+        var enemy = WhitePlays ? 2 : 1;
         var board = WhitePlays ? blackInfo : whiteInfo;
 
         for (int inc = 0; inc < 64; inc++)
@@ -195,17 +202,44 @@ public struct Othello
             {
                 for (int i = -1; i <= 1; i++)
                 {
+                    var newX = x + i;
+                    var newY = y + j;
+
+                    if (newX < 0 || newX > 7 || newY < 0 || newY > 7)
+                        continue;
+
                     int place = this[x + i, y + j];
 
                     if (i == j || place != player)
                         continue;
 
-                    yield return (x + (i * -1), y + (j * -1));
+                    for(int k = -1; k > -8; k--)
+                    {
+                        var tempX = x + i * k;
+                        var tempY = y + j * k;
+
+                        if(tempX < 0 || tempX > 7 || tempY < 0 || tempY > 7)
+                            break;
+
+                        var opposite = this[tempX, tempY];
+
+                        if(opposite == 0)
+                        {
+                            yield return (tempX, tempY);
+                            break;
+                        }
+
+                        if(opposite == enemy)
+                            continue;
+                        
+                        if(opposite == player)
+                            break;
+                    }   
                 }
             }
         }
     }
-    
+
     private byte whitePlays;
     private ulong whiteInfo;
     private ulong blackInfo;
